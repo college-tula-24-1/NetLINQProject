@@ -23,13 +23,7 @@ namespace NetLINQProject
 
         public static List<Employee> ListInit()
         {
-            List<Company> companies = new()
-            {
-                new(){ Title = "Yandex" },
-                new(){ Title = "Ozon" },
-                new(){ Title = "Mail Group" },
-                new(){ Title = "Sberbank" },
-            };
+            var companies = CompaniesInit();
 
             List<Employee> employees = new()
             {
@@ -132,11 +126,24 @@ namespace NetLINQProject
             
             return employees;
         }
+
+        public static List<Company> CompaniesInit()
+        {
+            List<Company> companies = new()
+            {
+                new(){ Title = "Yandex", City = new(){ Title = "Moscow" } },
+                new(){ Title = "Ozon", City = new(){ Title = "St. Petersburg" } },
+                new(){ Title = "Mail Group", City = new(){ Title = "Moscow" } },
+                new(){ Title = "Sberbank", City = new(){ Title = "Kazan" } },
+            };
+            return companies;
+        }
     }
 
     class Company
     {
         public string Title { get; set; } = null!;
+        public City? City { get; set; }
         public override string ToString()
         {
             return $"Title: {Title}";
