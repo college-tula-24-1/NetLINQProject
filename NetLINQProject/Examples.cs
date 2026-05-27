@@ -406,5 +406,38 @@ namespace NetLINQProject
                 Console.WriteLine();
             }
         }
+
+        public static void LinqJoinExample()
+        {
+            var employees = Employee.ListInit();
+            var companies = Employee.CompaniesInit();
+
+            var employeesCityOpers = from e in employees
+                                     join c in companies
+                                         on e.Company.Title equals c.Title
+                                     select new
+                                     {
+                                         Name = e.Name,
+                                         Company = c.Title,
+                                         City = c.City.Title
+                                     };
+            foreach (var e in employeesCityOpers)
+                Console.WriteLine($"Name: {e.Name}, Company: {e.Company}, City: {e.City}");
+            Console.WriteLine();
+
+            var employeesCityMethods = employees.Join(
+                companies,
+                e => e.Company.Title,
+                c => c.Title,
+                (e, c) => new
+                {
+                    Name = e.Name,
+                    Company = c.Title,
+                    City = c.City.Title
+                });
+            foreach (var e in employeesCityMethods)
+                Console.WriteLine($"Name: {e.Name}, Company: {e.Company}, City: {e.City}");
+            Console.WriteLine();
+        }
     }
 }
