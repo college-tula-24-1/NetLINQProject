@@ -6,6 +6,16 @@ using System.Threading.Tasks;
 
 namespace NetLINQProject
 {
+    class CityNameLengthComparer : IComparer<string>
+    {
+        public int Compare(string? x, string? y)
+        {
+            int xLength = x?.Length ?? 0;
+            int yLength = y?.Length ?? 0;
+            return xLength - yLength;
+        }
+    }
+
     static class Examples
     {
         public static void LinqWelcomeExample()
@@ -163,6 +173,152 @@ namespace NetLINQProject
             foreach (var circle in circles)
                 Console.WriteLine($"Type: {circle.GetType()}, Code: {circle.GetHashCode()}");
             Console.WriteLine();
+        }
+
+        public static void LinqSortExample()
+        {
+            Random random = new Random();
+            List<int> numbers = new();
+            for (int i = 0; i < 10; i++) numbers.Add(random.Next(0, 99));
+            foreach (var number in numbers) Console.Write($"{number} ");
+            Console.WriteLine();
+
+            var orderNumbersOpers = from n in numbers
+                                    orderby n
+                                    select n;
+            foreach (var number in orderNumbersOpers) Console.Write($"{number} ");
+            Console.WriteLine();
+
+            var orderNumbersMethods = numbers.OrderBy(n => n);
+            foreach (var number in orderNumbersMethods) Console.Write($"{number} ");
+            Console.WriteLine();
+
+
+            var employees = Employee.ListInit();
+            foreach (var e in employees)
+                Console.WriteLine(e);
+            Console.WriteLine();
+
+            var orderEmployeesOpers = from e in employees
+                                          //orderby e.Name
+                                          //orderby e.BirthDate
+                                      orderby e.Salary descending
+                                      select e;
+            foreach (var e in orderEmployeesOpers)
+                Console.WriteLine(e);
+            Console.WriteLine();
+
+            var orderEmployeesMethods = employees.
+                                                //OrderByDescending(e => e.Name);
+                                                //OrderBy(e => e.BirthDate);
+                                                OrderBy(e => e.Name);
+            foreach (var e in orderEmployeesMethods)
+                Console.WriteLine(e);
+            Console.WriteLine();
+
+
+            var orderEmployeesNameAgeOpers = from e in employees
+                                             //orderby e.Name, e.BirthDate
+                                             orderby e.Name descending, e.BirthDate
+                                             select e;
+            foreach (var e in orderEmployeesNameAgeOpers)
+                Console.WriteLine(e);
+            Console.WriteLine();
+
+            var orderEmployeesNameAgeMethods = employees.OrderByDescending(e => e.Name)
+                                                        //.OrderBy(e => e.Name)
+                                                        .ThenBy(e => e.Salary)
+                                                        .ThenByDescending(e => e.BirthDate);
+            foreach (var e in orderEmployeesNameAgeMethods)
+                Console.WriteLine(e);
+            Console.WriteLine();
+
+
+            List<string> cities = new() { "Moscow", "Tula", "Ufa", "Kazan", "Voroneg", "St.Petersburg" };
+            var orderCities = cities.OrderBy(c => c);
+            foreach (var c in orderCities)
+                Console.WriteLine(c);
+            Console.WriteLine();
+
+            var orderCitiesLength = cities.OrderBy(c => c, new CityNameLengthComparer());
+
+            foreach (var c in orderCitiesLength)
+                Console.WriteLine(c);
+            Console.WriteLine();
+        }
+
+        public static void LinqSetOperationsExample()
+        {
+            List<string> students = new() { "Bobby", "Poppy", "Sammy", "Jimmy", "Kenny", "Mikky" };
+            SortedSet<string> teachers = new() { "Jenny", "Kenny", "Villy", "Bobby", "Donny", "Henry" };
+
+            var union = students.Concat(teachers); //students.Union(teachers);
+            foreach (var n in union)
+                Console.Write($"{n} ");
+            Console.WriteLine();
+
+            var intersect = students.Intersect(teachers);
+            foreach (var n in intersect)
+                Console.Write($"{n} ");
+            Console.WriteLine();
+
+            var except = students.Except(teachers);
+            foreach (var n in except)
+                Console.Write($"{n} ");
+            Console.WriteLine();
+
+            except = teachers.Except(students);
+            foreach (var n in except)
+                Console.Write($"{n} ");
+            Console.WriteLine();
+        }
+
+        public static void LinqAggregateOperationsExample()
+        {
+            var employees = Employee.ListInit();
+
+            int count = employees.Count();
+            Console.WriteLine($"Count of employees = {count}");
+
+            var sumSalary = employees.Sum(e => e.Salary);
+            Console.WriteLine($"Sum of salary = {sumSalary}");
+
+            var minSalary = employees.Min(e => e.Salary);
+            var youngBirthDate = employees.Min(e => e.BirthDate);
+            var maxSalary = employees.Max(e => e.Salary);
+
+            var avgSalary = employees.Average(e => e.Salary);
+        }
+
+        public static void LinqSkipTakeExample()
+        {
+            var employees = Employee.ListInit();
+            foreach (var e in employees)
+                Console.WriteLine(e);
+            Console.WriteLine();
+
+            //var employeesSkip4 = employees.Skip(4).Take(4);
+            //foreach (var e in employeesSkip4)
+            //    Console.WriteLine(e);
+            //Console.WriteLine();
+
+            int pageCount = 5;
+            int page = 0;
+            int fullCount = employees.Count();
+
+            do
+            {
+                Console.Clear();
+
+                var pageEmployees = employees.Skip(page * pageCount)
+                                             .Take(pageCount);
+                foreach (var e in pageEmployees)
+                    Console.WriteLine(e);
+
+                page++;
+                Console.WriteLine("Press Any Key...\n");
+                Console.ReadKey();
+            } while (page * pageCount <= fullCount);
         }
     }
 }

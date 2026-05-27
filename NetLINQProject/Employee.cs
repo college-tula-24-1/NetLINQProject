@@ -11,60 +11,135 @@ namespace NetLINQProject
         public string Name { get; set; } = null!;
         public DateTime BirthDate { get; set; }
         public decimal Salary { get; set; }
+        public Company? Company { get; set; }
 
         public override string ToString()
         {
-            return $"Name: {Name}, Birth Date: {BirthDate.ToShortDateString()}, Salary: {Salary}";
+            return $"Name: {Name}, " +
+                $"Birth Date: {BirthDate.ToShortDateString()}, " +
+                $"Salary: {Salary}, " +
+                $"Company: {Company}";
         }
 
         public static List<Employee> ListInit()
         {
+            List<Company> companies = new()
+            {
+                new(){ Title = "Yandex" },
+                new(){ Title = "Ozon" },
+                new(){ Title = "Mail Group" },
+                new(){ Title = "Sberbank" },
+            };
+
             List<Employee> employees = new()
             {
                 new()
                 {
                     Name = "Tommy",
                     BirthDate = new DateTime(1995, 10, 24),
-                    Salary = 120000M
+                    Salary = 120000M,
+                    Company = companies[0],
                 },
 
                 new()
                 {
                     Name = "Jimmy",
                     BirthDate = new DateTime(1989, 5, 11),
-                    Salary = 135000M
+                    Salary = 135000M,
+                    Company = companies[1],
                 },
 
                 new()
                 {
                     Name = "Bobby",
                     BirthDate = new DateTime(2001, 7, 30),
-                    Salary = 90000M
+                    Salary = 90000M,
+                    Company = companies[2],
                 },
 
                 new()
                 {
                     Name = "Kenny",
                     BirthDate = new DateTime(1997, 11, 6),
-                    Salary = 110000M
+                    Salary = 110000M,
+                    Company = companies[3],
                 },
 
                 new()
                 {
                     Name = "Timmy",
                     BirthDate = new DateTime(1993, 9, 14),
-                    Salary = 115000M
+                    Salary = 115000M,
+                    Company = companies[0],
                 },
 
                 new()
                 {
                     Name = "Mikky",
                     BirthDate = new DateTime(2000, 5, 17),
-                    Salary = 100000M
+                    Salary = 100000M,
+                    Company = companies[3],
+                },
+
+                new()
+                {
+                    Name = "Tommy",
+                    BirthDate = new DateTime(1989, 9, 12),
+                    Salary = 140000M,
+                    Company = companies[0],
+                },
+
+                new()
+                {
+                    Name = "Jimmy",
+                    BirthDate = new DateTime(2001, 3, 8),
+                    Salary = 90000M,
+                    Company = companies[1],
+                },
+
+                new()
+                {
+                    Name = "Bobby",
+                    BirthDate = new DateTime(1999, 12, 7),
+                    Salary = 111000M,
+                    Company = companies[0],
+                },
+
+                new()
+                {
+                    Name = "Kenny",
+                    BirthDate = new DateTime(1993, 5, 16),
+                    Salary = 110000M,
+                    Company = companies[1],
+                },
+
+                new()
+                {
+                    Name = "Timmy",
+                    BirthDate = new DateTime(2000, 8, 22),
+                    Salary = 125000M,
+                    Company = companies[2],
+                },
+
+                new()
+                {
+                    Name = "Mikky",
+                    BirthDate = new DateTime(1993, 11, 27),
+                    Salary = 80000M,
+                    Company = companies[0],
                 },
             };
             
             return employees;
+        }
+    }
+
+    class Company
+    {
+        public string Title { get; set; } = null!;
+        public override string ToString()
+        {
+            return $"Title: {Title}";
         }
     }
 
